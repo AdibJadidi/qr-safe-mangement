@@ -8,10 +8,11 @@ import {
   MessageCircle,
   AlertTriangle,
 } from "lucide-react";
+import { Item } from "@/types/types";
 
 export default function FinderPage() {
   const { id } = useParams();
-  const [item, setItem] = useState<any>(null);
+  const [item, setItem] = useState<Item | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   useEffect(() => {
@@ -65,10 +66,6 @@ export default function FinderPage() {
               <AlertTriangle className="w-5 h-5" />
               <span>پیام مالک:</span>
             </div>
-            <p className="text-slate-700 text-sm leading-relaxed">
-              {item.description ||
-                "در صورت پیدا شدن، لطفاً از طریق چت زیر با من در ارتباط باشید."}
-            </p>
           </div>
 
           <h1 className="text-2xl font-bold">You Found an Item!</h1>

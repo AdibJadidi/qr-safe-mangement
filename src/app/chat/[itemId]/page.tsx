@@ -4,11 +4,12 @@ import { useParams, useSearchParams } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { Send, ArrowLeft, LocateIcon } from "lucide-react"; // تغییر جهت فلش برای انگلیسی
 import Link from "next/link";
+import { Message } from "@/types/types";
 
 export default function ChatPage() {
   const { itemId } = useParams();
   const searchParams = useSearchParams();
-  const [messages, setMessages] = useState<any[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const [mounted, setMounted] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -51,7 +52,7 @@ export default function ChatPage() {
           table: "messages",
           filter: `item_id=eq.${itemId}`,
         },
-        (payload) => {
+        (payload: { new: Message }) => {
           setMessages((prev) => [...prev, payload.new]);
           setTimeout(scrollToBottom, 100);
         },
@@ -85,7 +86,6 @@ export default function ChatPage() {
         async (position) => {
           const { latitude, longitude } = position.coords;
 
-          // آپدیت لوکیشن در دیتابیس
           await supabase
             .from("items")
             .update({
@@ -102,7 +102,7 @@ export default function ChatPage() {
           const { error } = await supabase.from("messages").insert([
             {
               item_id: itemId,
-              text: `LOCATION_PAYLOAD:${locationData}`, // یک پیشوند برای تشخیص پیام لوکیشن
+              text: `LOCATION_PAYLOAD:${locationData}`,
               is_from_owner: isOwner,
             },
           ]);
